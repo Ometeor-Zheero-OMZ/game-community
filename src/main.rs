@@ -75,7 +75,7 @@ async fn delete_user(delete_user_url: Path<UpdateUrl>, db: Data<Database>) -> Re
 async fn main() -> std::io::Result<()> {
 
     dotenv().ok();
-    let port: String = env::var("PORT").expect("PORT must be set");
+    let port: String = env::var("DB_PORT").expect("PORT must be set");
     let db = Database::init()
         .await
         .expect(DB_CONNECTION_FAILURE_ERROR_MSG);
