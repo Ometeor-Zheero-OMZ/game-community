@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  rustapp:
+    container_name: rustapp
+    image: itsuki/rustapp:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "surrealdb://${DATABASE_USER}:${DATABASE_PASSWORD}@db:8000/${DATABASE_NAME}"
+
+  db:
+    container_name: db
+    image: surrealdb/surrealdb:latest
+    command: start --log trace --bind 0.0.0.0:8000 memory
+    ports:
+      - "8000:8000"

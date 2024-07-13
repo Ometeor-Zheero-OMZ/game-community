@@ -1,0 +1,1 @@
+pub const DB_CONNECTION_FAILURE_ERROR_MSG: &str = "データベース接続に失敗しました。";
