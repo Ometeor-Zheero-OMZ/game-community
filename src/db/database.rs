@@ -20,11 +20,11 @@ impl Database {
                 password: "root",
             })
             .await?;
-        client.use_ns("surreal").use_db("pizzas").await.unwrap();
+        client.use_ns("surreal").use_db("game-community").await.unwrap();
         Ok(Database {
             client,
             name_space: String::from("surreal"),
-            db_name: String::from("pizzas"),
+            db_name: String::from("game-community"),
         })
     }
 }
