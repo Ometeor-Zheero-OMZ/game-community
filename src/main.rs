@@ -1,19 +1,21 @@
-use actix_web::web::Data;
-use actix_web::{
-    web::Path, get, patch, post, delete, web::Json, App, HttpServer
-};
-use dotenv::dotenv;
-use std::env;
-use error::DataError;
 mod db;
-use crate::db::{user_data_trait::UserDataTrait, Database};
 mod models;
-use crate::models::user::{AddUserRequest, UpdateUrl, User};
-use uuid;
-use validator::Validate;
 mod error;
 mod utils;
+mod middlewares;
+
+use crate::db::{user_data_trait::UserDataTrait, Database};
+use crate::models::user::{AddUserRequest, UpdateUrl, User};
 use crate::utils::consts::DB_CONNECTION_FAILURE_ERROR_MSG;
+use crate::middlewares::cors;
+
+use actix_web::web::Data;
+use actix_web::{
+    web::Path, middleware::Logger, get, patch, post, delete, web::Json, App, HttpServer
+};
+use error::DataError;
+use uuid;
+use validator::Validate;
 
 
 #[get("/users")]
@@ -73,22 +75,23 @@ async fn delete_user(delete_user_url: Path<UpdateUrl>, db: Data<Database>) -> Re
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-
-    dotenv().ok();
-    let port: String = env::var("DB_PORT").expect("PORT must be set");
     let db = Database::init()
         .await
         .expect(DB_CONNECTION_FAILURE_ERROR_MSG);
     let db_data = Data::new(db);
 
     HttpServer::new(move || {
+        let cors = cors();
+        
         App::new()
             .app_data(db_data.clone())
             .service(get_users)
             .service(add_user)
             .service(update_user)
+            .wrap(cors)
+            .wrap(Logger::default())
     })
-    .bind(port)?
+    .bind("127.0.0.1:8080")?
     .run()
     .await
 }
