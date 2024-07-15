@@ -15,7 +15,7 @@ build:
 	docker-compose build
 
 doc build:
-	docker build --build-arg DATABASE_URL=surrealdb://db:8000 -t itsuki/rustapp:1.0.0 .
+	docker build --build-arg DATABASE_URL=${DB_CONTAINER_NAME}://db:8000 -t game-community/rustapp:1.0.0 .
 
 # make rebuild
 rebuild:
