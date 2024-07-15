@@ -15,6 +15,7 @@ use error::DataError;
 use uuid;
 use validator::Validate;
 use actix_cors::Cors;
+use dotenv::dotenv;
 
 
 #[get("/users")]
@@ -74,6 +75,9 @@ async fn delete_user(delete_user_url: Path<UpdateUrl>, db: Data<Database>) -> Re
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+    let FRONTEND_PORT = std::env::var("FRONTEND_PORT").expect("環境変数が設定されていません: FRONTEND_PORT");
+
     let db = Database::init()
         .await
         .expect(DB_CONNECTION_FAILURE_ERROR_MSG);
@@ -81,7 +85,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin("http://localhost:3000")
+            .allowed_origin(&FRONTEND_PORT)
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
