@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+actix-cors = "0.7.0"
 actix-web = "4.8.0"
 async-trait = "0.1.81"
 derive_more = "0.99.18"
