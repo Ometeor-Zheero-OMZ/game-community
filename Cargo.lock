@@ -1264,6 +1264,7 @@ dependencies = [
  "derive_more",
  "dotenv",
  "json",
+ "lazy_static",
  "serde",
  "surrealdb",
  "uuid",
